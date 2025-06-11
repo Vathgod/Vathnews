@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Khmer News - Live (Responsive)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/5c9408ee79.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* Custom animation for the breaking news ticker */
+      @keyframes ticker {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      .ticker-item {
+        display: inline-block;
+        padding: 0 2rem;
+        animation: ticker 25s linear infinite;
+      }
+      /* Hide scrollbar for the navigation bar on mobile */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div
+      class="bg-red-600 text-white ticker-wrap overflow-hidden whitespace-nowrap h-8 flex items-center text-sm font-semibold"
+    >
+      <span class="ticker-item"
+        >BREAKING: Major government announcement expected later today... More
+        updates to follow.</span
+      >
+      <span class="ticker-item"
+        >NATIONAL TEAM WINS: Cambodia secures a stunning victory in the regional
+        football finals.</span
+      >
+    </div>
+
+    <header class="bg-white">
+      <div class="container mx-auto px-4 sm:px-6 py-3">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center gap-3"
+        >
+          <div class="flex items-center gap-3 self-start">
+            <img class="h-12 w-12" src="./pic1/nobglogo.png" alt="" />
+            <div>
+              <h1 class="text-xl font-bold text-gray-800">ព័ត៌មាន</h1>
+              <p class="text-xs text-gray-500">ប្លែក លឿន ទុកចិត្តបាន</p>
+            </div>
+          </div>
+          <div class="flex w-full sm:w-auto sm:max-w-xs">
+            <input
+              id="inputSearch"
+              type="text"
+              placeholder="Search news here..."
+              class="w-full px-4 py-2 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+            <button
+              id="buttonSearch"
+              class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="bg-blue-700 shadow-md">
+      <div class="container mx-auto px-2 sm:px-6 overflow-x-auto no-scrollbar">
+        <div
+          class="flex justify-start sm:justify-center items-center space-x-2 sm:space-x-8 text-sm"
+        >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="general"
+            >Home</a
+          >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="general"
+            >National</a
+          >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="general"
+            >International</a
+          >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="sports"
+            >Sport</a
+          >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="business"
+            >Business</a
+          >
+          <a
+            href="#"
+            class="nav-link text-white font-semibold px-3 py-3 hover:bg-blue-600 focus:bg-blue-600 whitespace-nowrap"
+            data-category="technology"
+            >Technology</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8">
+      <div id="content-container" class="w-full">
+        <div id="spinner" class="flex justify-center items-center h-96">
+          <i class="fas fa-spinner fa-spin fa-3x text-blue-700"></i>
+        </div>
+      </div>
+      <div id="show-more-container" class="text-center mt-8">
+        <button
+          id="showMore"
+          class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 hidden"
+        >
+          Show More
+        </button>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12">
+      <div class="container mx-auto px-6 py-8">
+        <div
+          class="text-center border-t border-gray-700 pt-6 text-gray-500 text-sm"
+        >
+          <p>
+            &copy; 2025 Khmer News. Powered by NewsAPI.org. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const API_KEY = "a4d4df7915104de5828ad81ee245c0c3";
+      const fallbackImage =
+        "https://via.placeholder.com/800x500/CCCCCC/FFFFFF?text=News+Image";
+      const contentContainer = document.getElementById("content-container");
+      const inputSearch = document.getElementById("inputSearch");
+      const buttonSearch = document.getElementById("buttonSearch");
+      const navLinks = document.querySelectorAll(".nav-link");
+      const showMoreBtn = document.getElementById("showMore");
+      const spinner = document.getElementById("spinner");
+      let currentPage = 1;
+      let currentQuery = "general";
+      let isSearching = false;
+
+      async function fetchNews(isNewSearch = true) {
+        spinner.style.display = "flex";
+        showMoreBtn.classList.add("hidden");
+        if (isNewSearch) {
+          currentPage = 1;
+          contentContainer.innerHTML = "";
+        }
+        let url;
+        if (isSearching) {
+          url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+            currentQuery
+          )}&apiKey=${API_KEY}&page=${currentPage}`;
+        } else {
+          url = `https://newsapi.org/v2/top-headlines?country=us&category=${currentQuery}&apiKey=${API_KEY}&page=${currentPage}`;
+        }
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`API Error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          displayNews(data.articles, isNewSearch);
+          if (data.totalResults > currentPage * 20) {
+            showMoreBtn.classList.remove("hidden");
+          }
+        } catch (error) {
+          console.error("Fetch Error:", error);
+          contentContainer.innerHTML = `<p class="text-center text-red-500">Failed to load news. Please check the API key or try again later.</p>`;
+        } finally {
+          spinner.style.display = "none";
+        }
+      }
+
+      function displayNews(articles, isNewSearch) {
+        if (!articles || articles.length === 0) {
+          if (isNewSearch) {
+            contentContainer.innerHTML =
+              '<p class="text-center text-gray-500">No articles found.</p>';
+          }
+          return;
+        }
+        if (isNewSearch) {
+          const featuredArticle = articles[0];
+          const sideStories = articles.slice(1, 3);
+          const latestNews = articles.slice(3);
+          const layoutHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-lg shadow">
+                    ${createFeaturedArticleHTML(featuredArticle)}
+                </div>
+                <div class="flex flex-col gap-6">
+                    ${sideStories.map(createSideStoryHTML).join("")}
+                </div>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 border-l-4 border-blue-700 pl-3">Latest News</h2>
+            <div id="latest-news-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                ${latestNews.map(createLatestNewsCardHTML).join("")}
+            </div>
+          `;
+          contentContainer.innerHTML = layoutHTML;
+        } else {
+          const latestNewsGrid = document.getElementById("latest-news-grid");
+          if (latestNewsGrid) {
+            articles.forEach((article) => {
+              latestNewsGrid.insertAdjacentHTML(
+                "beforeend",
+                createLatestNewsCardHTML(article)
+              );
+            });
+          }
+        }
+      }
+
+      function createFeaturedArticleHTML(article) {
+        if (!article) return "";
+        const articleDate = new Date(article.publishedAt).toLocaleDateString();
+        return `
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                <img class="w-full h-52 sm:h-80 object-cover rounded-lg mb-4" src="${
+                  article.urlToImage || fallbackImage
+                }" alt="">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3 hover:text-blue-700">${
+                  article.title
+                }</h2>
+                <p class="text-gray-600 mb-3 hidden sm:block">${
+                  article.description || ""
+                }</p>
+                <span class="text-sm font-medium text-gray-500">${articleDate}</span>
+            </a>
+        `;
+      }
+
+      function createSideStoryHTML(article) {
+        if (!article) return "";
+        const articleDate = new Date(article.publishedAt).toLocaleDateString();
+        return `
+            <div class="bg-white p-4 rounded-lg shadow">
+                <a href="${
+                  article.url
+                }" target="_blank" rel="noopener noreferrer" class="flex sm:flex-col gap-4">
+                    <img class="w-24 h-24 sm:w-full sm:h-32 object-cover rounded-md" src="${
+                      article.urlToImage || fallbackImage
+                    }" alt="">
+                    <div class="flex-1">
+                      <h3 class="font-bold text-md text-gray-900 hover:text-blue-700">${
+                        article.title
+                      }</h3>
+                      <span class="text-xs font-medium text-gray-500">${articleDate}</span>
+                    </div>
+                </a>
+            </div>
+        `;
+      }
+
+      function createLatestNewsCardHTML(article) {
+        if (!article) return "";
+        const articleDate = new Date(article.publishedAt).toLocaleDateString();
+        return `
+            <div class="bg-white p-3 rounded-lg shadow">
+                <a href="${
+                  article.url
+                }" target="_blank" rel="noopener noreferrer">
+                    <img class="w-full h-32 object-cover rounded-md mb-3" src="${
+                      article.urlToImage || fallbackImage
+                    }" alt="">
+                    <h3 class="font-bold text-sm text-gray-800 hover:text-blue-700">${
+                      article.title
+                    }</h3>
+                    <span class="text-xs font-medium text-gray-500">${
+                      article.source.name
+                    } - ${articleDate}</span>
+                </a>
+            </div>
+        `;
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        if (API_KEY === "PASTE_YOUR_API_KEY_HERE" || API_KEY === "") {
+          spinner.style.display = "none";
+          contentContainer.innerHTML =
+            '<p class="text-center text-orange-500 font-semibold text-lg">Please get your free API key from NewsAPI.org and add it to the script.</p>';
+          return;
+        }
+        fetchNews(true);
+      });
+
+      buttonSearch.addEventListener("click", () => {
+        const query = inputSearch.value.trim();
+        if (query) {
+          isSearching = true;
+          currentQuery = query;
+          fetchNews(true);
+        }
+      });
+      inputSearch.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") buttonSearch.click();
+      });
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          inputSearch.value = "";
+          isSearching = false;
+          currentQuery = link.getAttribute("data-category");
+          fetchNews(true);
+        });
+      });
+      showMoreBtn.addEventListener("click", () => {
+        currentPage++;
+        fetchNews(false);
+      });
+    </script>
+  </body>
+</html>

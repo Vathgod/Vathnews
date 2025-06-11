@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Khmer News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/5c9408ee79.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* Applying the custom background pattern */
+      .main-content-bg {
+        background-image: url("pic1/Screenshot 2024-10-07 232150.png");
+        background-color: #004a99; /* A fallback color */
+      }
+      @keyframes ticker {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      .ticker-item {
+        display: inline-block;
+        padding: 0 2rem;
+        animation: ticker 25s linear infinite;
+      }
+      /* Hide scrollbar for the navigation bar on mobile */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div
+      class="bg-red-600 sticky top-0 z-20 text-[10px] lg:text-sm text-white ticker-wrap overflow-hidden whitespace-nowrap lg:h-8 flex items-center font-semibold"
+    >
+      <span class="ticker-item"
+        >BREAKING: Major government announcement expected later today... More
+        updates to follow.</span
+      >
+      <span class="ticker-item"
+        >NATIONAL TEAM WINS: Cambodia secures a stunning victory in the regional
+        football finals.</span
+      >
+    </div>
+    <div class="mx-auto">
+      <header
+        class="bg-[#002b5c] flex justify-center items-centers shadow-md lg:h-[250px] h-[100px]"
+        style="
+          background-image: url('pic1/Screenshot\ 2024-10-08\ 192502.png');
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+        "
+      >
+        <div class="container px-4 py-3 lg:ml-[35%] ml-32">
+          <div class="flex items-center gap-4">
+            <div class="logo">
+              <img
+                src="pic1/nobglogo.png"
+                alt="Ministry of Information Emblem"
+                class="lg:h-64 lg:w-64 h-16 w-16"
+              />
+            </div>
+            <div class="text-white">
+              <h2 class="text-2xl md:text-3xl font-bold">ព័ត៌មាន</h2>
+              <p class="text-sm hidden md:block">
+                ប្លែក​ លឿន ​​ទុកចិត្តបាន​​ ពេលណា ទីណាក៍បាន
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <nav class="bg-[#003f82] sticky lg:top-8 top-3 z-19">
+        <div
+          class="container mx-auto lg:py-2 lg:px-4 flex py-1 flex-col lg:flex-row justify-around items-center h-20 lg:h-14"
+        >
+          <div class="left-nav flex items-center gap-1 md:gap-2">
+            <button
+              data-category="general"
+              class="nav-btn text-white/80 hover:text-white hover:bg-white/10 text-[10px] md:text-base font-semibold px-3 py-1 rounded-md transition-colors"
+            >
+              Home
+            </button>
+            <button
+              data-category="sports"
+              class="nav-btn text-white/80 hover:text-white hover:bg-white/10 text-[10px] md:text-base font-semibold px-3 py-1 rounded-md transition-colors"
+            >
+              Sport
+            </button>
+            <button
+              data-category="world"
+              class="nav-btn text-white/80 hover:text-white hover:bg-white/10 text-[10px] md:text-base font-semibold px-3 py-1 rounded-md transition-colors"
+            >
+              World
+            </button>
+            <button
+              data-category="technology"
+              class="nav-btn text-white/80 hover:text-white hover:bg-white/10 text-[10px] md:text-base font-semibold px-3 py-1 rounded-md transition-colors"
+            >
+              Technology
+            </button>
+            <button
+              data-category="business"
+              class="nav-btn text-white/80 hover:text-white hover:bg-white/10 text-[10px] md:text-base font-semibold px-3 py-1 rounded-md transition-colors"
+            >
+              Business
+            </button>
+          </div>
+
+          <div
+            class="bg-transparent flex lg:w-72 w-56 justify-center items-center"
+          >
+            <div
+              class="right-nav text-black flex items-center bg-[#CCCCFF] w-full max-w-sm p-1 lg:p-2 rounded-3xl lg:shadow-[inset_-4px_-3px_1px_#ffffff90,_inset_4px_4px_1px_#00000026] shadow-[inset_-2px_-1px_1px_#ffffff90,_inset_2px_2px_1px_#00000066]"
+            >
+              <input
+                id="inputSearch"
+                type="text"
+                placeholder="Search your information here"
+                class="flex-grow bg-transparent lg:text-sm text-[10px] px-2 text-black placeholder:text-slate-400 focus:outline-none"
+              />
+
+              <button
+                id="buttonSearch"
+                class="lg:pl-3 text-slate-500 text-[10px] lg:text-lg hover:text-slate-700"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main
+        id="container-card"
+        class="main-content-bg w-full flex flex-col items-center gap-3 p-4 md:p-6 min-h-screen"
+      ></main>
+
+      <section
+        id="foot"
+        class="main-content-bg pb-12 flex justify-center"
+        style="padding-top: 1rem"
+      >
+        <button
+          id="showMore"
+          class="border-none font-bold py-1 px-6 rounded bg-white/90 hover:bg-white shadow"
+        >
+          Show More
+        </button>
+      </section>
+
+      <footer class="bg-gray-900 text-white py-10 px-5">
+        <div
+          class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+        >
+          <!-- About -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4">About VATH News</h3>
+            <p class="text-sm text-gray-300">
+              VATH News is your trusted source for the latest news in Cambodia
+              and beyond. We deliver reliable, fast, and accurate information to
+              keep you informed every day.
+            </p>
+          </div>
+
+          <!-- Social -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Follow Us</h3>
+            <ul class="space-y-3 text-gray-300">
+              <li>
+                <a href="#" class="flex items-center gap-2 hover:text-white">
+                  <i class="fab fa-facebook-f text-blue-500"></i> Facebook
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-2 hover:text-white">
+                  <i class="fab fa-instagram text-pink-500"></i> Instagram
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-2 hover:text-white">
+                  <i class="fab fa-youtube text-red-600"></i> YouTube
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-2 hover:text-white">
+                  <i class="fab fa-tiktok text-white"></i> TikTok
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Contact -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Contact Us</h3>
+            <ul class="text-gray-300 text-sm space-y-2">
+              <li>Email: contact@vathnews.com</li>
+              <li>Phone: +855 879 870 72</li>
+              <li>Support: Mon–Fri, 8am–6pm</li>
+            </ul>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Our Location</h3>
+            <p class="text-gray-300 text-sm">
+              VATH News Headquarters<br />
+              Russian Blvd, Phnom Penh, Cambodia
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="mt-10 border-t border-gray-700 pt-5 text-center text-sm text-gray-500"
+        >
+          © 2025 VATH News. All rights reserved.
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // --- Configuration ---
+      // WARNING: This is NOT secure for a public website. Your API key is visible here.
+      // const apiKey = "6889ff3653635a6722e46dbd4425704a";
+      const blogContainer = document.getElementById("container-card");
+      const searchInput = document.getElementById("inputSearch");
+      const searchButton = document.getElementById("buttonSearch");
+      const showMoreButton = document.getElementById("showMore");
+      const navButtons = document.querySelectorAll(".nav-btn");
+
+      let currentPage = 1;
+      let currentQuery = ""; // Stores the active search term
+      let currentCategory = "general"; // Default category for top headlines
+
+      // --- Core API Fetching Function ---
+      async function fetchNews(query, category, page = 1) {
+        const pageSize = 10;
+        let apiUrl = "";
+
+        // Use the /search endpoint if there's a search query.
+        // Otherwise, use the /top-headlines endpoint for categories.
+        if (query) {
+          apiUrl = `https://gnews.io/api/v4/search?q=${encodeURIComponent(
+            query
+          )}&lang=en&country=us&max=${pageSize}&page=${page}&apikey=${apiKey}`;
+        } else {
+          apiUrl = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=${pageSize}&page=${page}&apikey=${apiKey}`;
+        }
+
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.errors
+                ? errorData.errors.join(", ")
+                : "Network response was not ok"
+            );
+          }
+          const data = await response.json();
+          // Show "Show More" button only if we received a full page of results
+          showMoreButton.style.display =
+            data.articles.length < pageSize ? "none" : "block";
+          return data.articles || [];
+        } catch (error) {
+          console.error("Error fetching news:", error);
+          blogContainer.innerHTML = `<p class="text-red-200 bg-red-800/50 p-4 rounded-md">Failed to load news: ${error.message}</p>`;
+          showMoreButton.style.display = "none";
+          return [];
+        }
+      }
+
+      // --- Display Function ---
+      function displayBlogs(articles, clear = false) {
+        if (clear) {
+          blogContainer.innerHTML = "";
+        }
+
+        if (!articles || articles.length === 0) {
+          if (clear) {
+            blogContainer.innerHTML =
+              '<p class="text-white">No articles found for this query.</p>';
+          }
+          showMoreButton.style.display = "none";
+          return;
+        }
+
+        articles.forEach((article) => {
+          // GNews.io sometimes has articles with "[Removed]" as title
+          if (!article.title || article.title === "[Removed]") return;
+
+          const blogCard = document.createElement("div");
+          blogCard.className =
+            "card flex items-center gap-3 w-full max-w-5xl bg-black/40 rounded-md p-2 border border-white/20 hover:border-white/50 hover:bg-black/50 transition-all duration-300 cursor-pointer";
+
+          const pic = document.createElement("div");
+          pic.className = "w-28 h-20 flex-shrink-0";
+
+          const img = document.createElement("img");
+          // *** MODIFIED: Use article.image instead of article.urlToImage ***
+          img.src = article.image || "https://via.placeholder.com/150";
+          img.alt = article.title;
+          img.className = "w-full h-full object-cover rounded-sm";
+          // Handle image loading errors
+          img.onerror = () => {
+            img.src = "https://via.placeholder.com/150";
+          };
+
+          const text = document.createElement("div");
+          text.className = "flex-grow";
+
+          const title = document.createElement("h2");
+          title.className = "text-white font-semibold text-base md:text-lg";
+          title.textContent = article.title;
+
+          const description = document.createElement("p");
+          description.className = "text-gray-300 text-xs md:text-sm mt-1";
+          const descText = article.description || "";
+          description.textContent =
+            descText.slice(0, 120) + (descText.length > 120 ? "..." : "");
+
+          text.appendChild(title);
+          text.appendChild(description);
+          pic.appendChild(img);
+          blogCard.appendChild(pic);
+          blogCard.appendChild(text);
+
+          blogCard.addEventListener("click", () => {
+            window.open(article.url, "_blank");
+          });
+
+          blogContainer.appendChild(blogCard);
+        });
+      }
+
+      // --- Event Handlers ---
+      async function handleNewRequest(query, category) {
+        currentPage = 1;
+        currentQuery = query;
+        currentCategory = category;
+        blogContainer.innerHTML =
+          '<p class="text-white text-center text-lg">Loading news...</p>';
+        const articles = await fetchNews(
+          currentQuery,
+          currentCategory,
+          currentPage
+        );
+        displayBlogs(articles, true);
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const category = button.dataset.category;
+          searchInput.value = ""; // Clear search input when a category is clicked
+          handleNewRequest("", category); // No search query, just category
+        });
+      });
+
+      searchButton.addEventListener("click", () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          handleNewRequest(query, ""); // Search query, no category
+        }
+      });
+
+      searchInput.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+          searchButton.click();
+        }
+      });
+
+      showMoreButton.addEventListener("click", async () => {
+        currentPage++;
+        const articles = await fetchNews(
+          currentQuery,
+          currentCategory,
+          currentPage
+        );
+        displayBlogs(articles, false); // Append new articles, don't clear old ones
+      });
+
+      // --- Initial Load on Page Start ---
+      handleNewRequest("", "general"); // Load "Home" (general) category by default
+    </script>
+  </body>
+</html>
